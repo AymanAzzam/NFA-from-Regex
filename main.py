@@ -17,7 +17,9 @@ def is_valid(regex_list):
     
     # two consecutive operations 
     for i in range(len(regex_list)-1):
-        if is_operation(regex_list[i]) and is_operation(regex_list[i+1]):
+        if (regex_list[i] == '*' and regex_list[i+1] == '*') or \
+            ((regex_list[i] == '|' or regex_list[i] == '+') and \
+                (regex_list[i+1] == '|' or regex_list[i+1] == '+')):
             print("Not Valid Input: Two consecutive operations", regex_list[i], regex_list[i+1])
             return False
     
@@ -73,11 +75,11 @@ def base_solver(regex_list):
 
 # regex_list: list of symbols
 # start: the start index of the list
-def solver(regex_list, start = 0):
+def solver_helper(regex_list, start = 0):
     end = start
     while(end < len(regex_list) and regex_list[end] != ')'):
         if regex_list[end] == '(':
-            solver(regex_list, end+1)
+            solver_helper(regex_list, end+1)
         end += 1
     # solving the part that doesn't contain parentheses
     # and # replacing the solved part with the solution
@@ -87,7 +89,14 @@ def solver(regex_list, start = 0):
     else:
         output = base_solver(regex_list[start:end])
         regex_list[start:end] = output
-       
+
+def solver(regex_list):
+    i = 0
+    while(i < len(regex_list)):
+        if regex_list[i] == '(':
+            solver_helper(regex_list, i)
+        i +=1
+    base_solver(regex_list)
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
@@ -97,5 +106,4 @@ if __name__ == "__main__":
         regex_list = [str(symbol) for symbol in regex]
         if is_valid(regex_list):
             solver(regex_list)
-            base_solver(regex_list)
             print(regex_list)

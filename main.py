@@ -108,4 +108,4 @@ if __name__ == "__main__":
             regex_list = [Block(symbol) if is_char(symbol) else str(symbol) for symbol in regex]
             solver(regex_list)
             print("_____________________________________________")
-            print(regex_list[0].json()[1])
+            print(regex_list[0].json_output())

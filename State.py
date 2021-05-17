@@ -13,13 +13,13 @@ class State:
 
     def json(self):
         json = \
-            '"S{}": {{\n' \
-            '   "isTerminatingState": {},\n'.format(self.number, str(self.is_terminating).lower())
+            '   "S{}": {{\n' \
+            '      "isTerminatingState": {},\n'.format(self.number, str(self.is_terminating).lower())
         for input_character, states in self.input_to_states.items():
-            json += '   "{}": [\n'.format(input_character)
+            json += '      "{}": [\n'.format(input_character)
             for i, state in enumerate(states):
-                json += '       "S{}"'.format(state)
+                json += '          "S{}"'.format(state)
                 json += ',\n' if i != len(states) - 1 else "\n"
-            json += '   ]\n'
-        json += '}\n'
+            json += '      ]\n'
+        json += '   },\n'
         return json

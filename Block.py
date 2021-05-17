@@ -1,5 +1,6 @@
 from State import State
 
+
 class Block:
 
     def __init__(self, character=None, a=None, b=None, operator=None, is_terminating=False):
@@ -8,6 +9,18 @@ class Block:
         self.B = b
         self.operator = operator
         self.is_terminating = is_terminating
+
+    def json_output(self):
+        json_text = '{\n' \
+                    '   "startingState": "S0"\n'
+        self.is_terminating = True
+        last_created_state, json_block = self.json()
+        json_text += json_block
+        if self.operator == '.':
+            terminating_state = State(last_created_state, True)
+            json_text += terminating_state.json()
+        json_text = json_text[:-2] + "\n}"
+        return json_text
 
     def json(self, starting_state=0, end_state_given=-1):
         if self.character is not None:
@@ -49,7 +62,6 @@ class Block:
         elif not self.is_terminating:
             end_state.connect("Epsilon", last_created_state_number + 1)
             return last_created_state_number + 1
-
 
 # a = Block('a')
 # b = Block('b')

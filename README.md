@@ -1,6 +1,5 @@
-# NFA-from-Regex-Expression
+# NFA from Regex Expression
 A command line tool to convert a regular expression into its corresponding NFA using Thompson's construction algorithm.
-
 
 ### The Supported Regex Rules
 1. Concatenation: AB
@@ -14,4 +13,5 @@ A command line tool to convert a regular expression into its corresponding NFA u
 
 ### Team Members
 [Ayman Azzam](https://github.com/AymanAzzam)
+
 [Ayman ElAkwah](https://github.com/aymanElakwah)

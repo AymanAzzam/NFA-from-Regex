@@ -12,7 +12,7 @@ class Block:
 
     def json_output(self):
         json_text = '{\n' \
-                    '   "startingState": "S0"\n'
+                    '   "startingState": "S0",\n'
         self.is_terminating = True
         last_created_state, json_block = self.json()
         json_text += json_block

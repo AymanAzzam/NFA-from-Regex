@@ -1,36 +1,37 @@
 import sys
+from Block import Block
 
 # c: is a symbol
 def is_char(c):
-    return True if (c >= 'a' and c <= 'z') or (c >= 'A' and c <= 'Z') or (c >= '0' and c <= '9') else False
+    return type(c) == Block or (c >= 'a' and c <= 'z') or (c >= 'A' and c <= 'Z') or (c >= '0' and c <= '9')
 
 def is_operation(c):
-    return True if c == '|' or c == '+' or c == '*' else False 
+    return c == '|' or c == '+' or c == '*' 
 
-# regex_list: list of symbols
-def is_valid(regex_list):
+# regex: string of symbols
+def is_valid(regex):
     # symbol validation
-    for symbol in regex_list:
+    for symbol in regex:
         if not is_char(symbol) and not is_operation(symbol) and symbol != '(' and symbol != ')':
             print("Not Valid Input: unvalid symbol", symbol)
             return False
     
     # two consecutive operations 
-    for i in range(len(regex_list)-1):
-        if (regex_list[i] == '*' and regex_list[i+1] == '*') or \
-            ((regex_list[i] == '|' or regex_list[i] == '+') and \
-                (regex_list[i+1] == '|' or regex_list[i+1] == '+')):
-            print("Not Valid Input: Two consecutive operations", regex_list[i], regex_list[i+1])
+    for i in range(len(regex)-1):
+        if (regex[i] == '*' and regex[i+1] == '*') or \
+            ((regex[i] == '|' or regex[i] == '+') and \
+                (regex[i+1] == '|' or regex[i+1] == '+')):
+            print("Not Valid Input: Two consecutive operations", regex[i], regex[i+1])
             return False
     
     # or with 1 operand
-    if regex_list[0] == '|' or regex_list[0] == '+' or regex_list[-1] == '|' or regex_list[-1] == '+' :
+    if regex[0] == '|' or regex[0] == '+' or regex[-1] == '|' or regex[-1] == '+' :
         print("Not Valid Input: OR operation with 1 operand")
         return False
     
     # parentheses  balancing
     stack = 0
-    for symbol in regex_list:
+    for symbol in regex:
         if symbol == '(':
             stack += 1
         elif symbol == ')':
@@ -50,7 +51,7 @@ def base_solver(regex_list):
     i = 0
     while(i < len(regex_list)-1):
         if regex_list[i+1] == '*':
-            regex_list[i:i+2] = [regex_list[i] + '*'] #TODO
+            regex_list[i:i+2] = [Block(a = regex_list[i], operator = '*')]
         else:
             i += 1
     
@@ -58,7 +59,7 @@ def base_solver(regex_list):
     i = 0
     while(i < len(regex_list)-1):
         if  is_char(regex_list[i]) and is_char(regex_list[i+1]):
-            regex_list[i:i+2] = [regex_list[i] + regex_list[i+1]] #TODO
+            regex_list[i:i+2] = [Block(a = regex_list[i], b = regex_list[i+1], operator = '.')]
         else:
             i += 1
     
@@ -67,7 +68,7 @@ def base_solver(regex_list):
     while(i < len(regex_list)-2):
         if  is_char(regex_list[i]) and (regex_list[i+1] == '|' or regex_list[i+1] == '+') and \
             is_char(regex_list[i+2]):
-            regex_list[i:i+3] = [regex_list[i] + regex_list[i+1] + regex_list[i+2]] #TODO
+            regex_list[i:i+3] = [Block(a = regex_list[i], b = regex_list[i+2], operator = '+')]
         else:
             i += 1
 
@@ -103,7 +104,8 @@ if __name__ == "__main__":
         print("Unvalid number of arguments")
     else:
         regex = sys.argv[1]
-        regex_list = [str(symbol) for symbol in regex]
-        if is_valid(regex_list):
+        if is_valid(regex):
+            regex_list = [Block(symbol) if is_char(symbol) else str(symbol) for symbol in regex]
             solver(regex_list)
-            print(regex_list)
+            print("_____________________________________________")
+            print(regex_list[0].json()[1])

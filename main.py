@@ -1,6 +1,5 @@
 import sys
 
-#TODO
 # c: is a symbol
 def is_char(c):
     return True if (c >= 'a' and c <= 'z') or (c >= 'A' and c <= 'Z') or (c >= '0' and c <= '9') else False
@@ -49,7 +48,7 @@ def base_solver(regex_list):
     i = 0
     while(i < len(regex_list)-1):
         if regex_list[i+1] == '*':
-            regex_list[i:i+2] = regex_list[i] #TODO
+            regex_list[i:i+2] = [regex_list[i] + '*'] #TODO
         else:
             i += 1
     
@@ -57,7 +56,7 @@ def base_solver(regex_list):
     i = 0
     while(i < len(regex_list)-1):
         if  is_char(regex_list[i]) and is_char(regex_list[i+1]):
-            regex_list[i:i+2] = regex_list[i] #TODO
+            regex_list[i:i+2] = [regex_list[i] + regex_list[i+1]] #TODO
         else:
             i += 1
     
@@ -66,7 +65,7 @@ def base_solver(regex_list):
     while(i < len(regex_list)-2):
         if  is_char(regex_list[i]) and (regex_list[i+1] == '|' or regex_list[i+1] == '+') and \
             is_char(regex_list[i+2]):
-            regex_list[i:i+3] = regex_list[i] #TODO
+            regex_list[i:i+3] = [regex_list[i] + regex_list[i+1] + regex_list[i+2]] #TODO
         else:
             i += 1
 
@@ -79,18 +78,16 @@ def solver(regex_list, start = 0):
     while(end < len(regex_list) and regex_list[end] != ')'):
         if regex_list[end] == '(':
             solver(regex_list, end+1)
-        else:
-            end += 1
-    
+        end += 1
     # solving the part that doesn't contain parentheses
+    # and # replacing the solved part with the solution
     if regex_list[start] == '(': # this is a special case
         output = base_solver(regex_list[start+1:end])
+        regex_list[start:end+1] = output
     else:
         output = base_solver(regex_list[start:end])
-
-    # replacing the solved part with the solution
-    regex_list[start:end] = output
-
+        regex_list[start:end] = output
+       
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
@@ -100,4 +97,5 @@ if __name__ == "__main__":
         regex_list = [str(symbol) for symbol in regex]
         if is_valid(regex_list):
             solver(regex_list)
+            base_solver(regex_list)
             print(regex_list)

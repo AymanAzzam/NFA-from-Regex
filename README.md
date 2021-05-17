@@ -14,4 +14,4 @@ A command line tool to convert a regular expression into its corresponding NFA u
 ### Team Members
 [Ayman Azzam](https://github.com/AymanAzzam)
 
-[Ayman ElAkwah](https://github.com/aymanElakwah)
+[Ayman Elakwah](https://github.com/aymanElakwah)

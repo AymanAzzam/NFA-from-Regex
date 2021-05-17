@@ -14,7 +14,8 @@ class State:
     def json(self):
         json = \
             '   "S{}": {{\n' \
-            '      "isTerminatingState": {},\n'.format(self.number, str(self.is_terminating).lower())
+            '      "isTerminatingState": {}{}\n'.format(
+                self.number, str(self.is_terminating).lower(), ',' if len(self.input_to_states) != 0 else '')
         for input_character, states in self.input_to_states.items():
             json += '      "{}": [\n'.format(input_character)
             for i, state in enumerate(states):

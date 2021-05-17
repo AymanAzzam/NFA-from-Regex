@@ -41,7 +41,7 @@ class Block:
             left_state.connect("Epsilon", starting_state + 2)
             left_state.connect("Epsilon", e1 + 1)
             last_created_state = self.put_end_state(e2, right_state, end_state_given)
-            return last_created_state, left_state.json() + right_state.json() + a_json + b_json
+            return last_created_state, left_state.json() + a_json + b_json + right_state.json()
         elif self.operator == "*":
             left_state = State(starting_state)
             right_state = State(starting_state + 1, self.is_terminating)
@@ -49,7 +49,7 @@ class Block:
             left_state.connect("Epsilon", starting_state + 2)
             left_state.connect("Epsilon", right_state.number)
             last_created_state = self.put_end_state(e1, right_state, end_state_given)
-            return last_created_state, left_state.json() + right_state.json() + a_json
+            return last_created_state, left_state.json() + a_json + right_state.json()
 
     def put_end_state(self, last_created_state_number, end_state, end_state_given):
         if end_state_given != -1:
@@ -62,11 +62,3 @@ class Block:
         elif not self.is_terminating:
             end_state.connect("Epsilon", last_created_state_number + 1)
             return last_created_state_number + 1
-
-# a = Block('a')
-# b = Block('b')
-# c = Block('c')
-# A = Block(a=a, b=b, operator='+')
-# B = Block(a=A, b=c, operator='.')
-# C = Block(a=B, operator='*', is_terminating=True)
-# print(C.json(0)[1])

@@ -125,7 +125,7 @@ def graph(json_text):
                 dot.edge(state, to_state, constraint='false', label='ϵ' if key == 'Epsilon' else key)
         except:
             pass
-    dot.render('NFA-3', view=True)
+    dot.render('NFA', view=True)
 
 
 if __name__ == "__main__":

@@ -1,3 +1,4 @@
+import sys
 
 #TODO
 # c: is a symbol
@@ -21,12 +22,12 @@ def is_valid(regex_list):
     
     # or with 1 operand
     for i in range(len(regex_list)-2):
-        if  is_char(regex_list[i]) and (regex_list[i+1] == '|' or regex_list[i+1] == '+') and \
-            is_char(regex_list[i+2]):
-            continue
-        else:
-            print("Not Valid Input: Or with 1 operand", regex_list[i], regex_list[i+1], regex_list[i+2])
-            return False
+        if regex_list[i+1] == '|' or regex_list[i+1] == '+':
+            if  is_char(regex_list[i]) and is_char(regex_list[i+2]):
+                continue
+            else:
+                print("Not Valid Input: Or with 1 operand", regex_list[i], regex_list[i+1], regex_list[i+2])
+                return False
 
     # parentheses  balancing
     stack = 0
@@ -47,24 +48,35 @@ def is_valid(regex_list):
 # regex_list: list of symbols
 def base_solver(regex_list):
     # solve Repetition
-    for i in range(1, len(regex_list)):
-        if regex_list[i] == '*':
-            pass #TODO
-
+    i = 0
+    while(i < len(regex_list)-1):
+        if regex_list[i+1] == '*':
+            regex_list[i:i+2] = regex_list[i] #TODO
+        else:
+            i += 1
+    
     # solve Concatenation
-    for i in range(len(regex_list)-1):
+    i = 0
+    while(i < len(regex_list)-1):
         if  is_char(regex_list[i]) and is_char(regex_list[i+1]):
-            pass #TODO
-
+            regex_list[i:i+2] = regex_list[i] #TODO
+        else:
+            i += 1
+    
     # solve ORing
-    for i in range(len(regex_list)-2):
+    i = 0
+    while(i < len(regex_list)-2):
         if  is_char(regex_list[i]) and (regex_list[i+1] == '|' or regex_list[i+1] == '+') and \
             is_char(regex_list[i+2]):
-            pass #TODO
+            regex_list[i:i+3] = regex_list[i] #TODO
+        else:
+            i += 1
+
+    return regex_list
 
 # regex_list: list of symbols
 # start: the start index of the list
-def solver(regex_list, start):
+def solver(regex_list, start = 0):
     end = start
     while(end < len(regex_list) and regex_list[end] != ')'):
         if regex_list[end] == '(':
@@ -79,8 +91,15 @@ def solver(regex_list, start):
         output = base_solver(regex_list[start:end])
 
     # replacing the solved part with the solution
-    regex_list[start:end] = [output]
+    regex_list[start:end] = output
 
 
 if __name__ == "__main__":
-    pass
+    if len(sys.argv) != 2:
+        print("Unvalid number of arguments")
+    else:
+        regex = sys.argv[1]
+        regex_list = [str(symbol) for symbol in regex]
+        if is_valid(regex_list):
+            solver(regex_list)
+            print(regex_list)

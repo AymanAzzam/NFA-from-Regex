@@ -5,30 +5,28 @@ import sys
 def is_char(c):
     return True if (c >= 'a' and c <= 'z') or (c >= 'A' and c <= 'Z') or (c >= '0' and c <= '9') else False
 
+def is_operation(c):
+    return True if c == '|' or c == '+' or c == '*' else False 
+
 # regex_list: list of symbols
 def is_valid(regex_list):
     # symbol validation
     for symbol in regex_list:
-        if not is_char(symbol) and symbol != '|' and symbol != '+' and symbol != '*' and \
-                symbol != '(' and symbol != ')':
+        if not is_char(symbol) and not is_operation(symbol) and symbol != '(' and symbol != ')':
             print("Not Valid Input: unvalid symbol", symbol)
             return False
     
     # two consecutive operations 
     for i in range(len(regex_list)-1):
-        if not is_char(regex_list[i]) and not is_char(regex_list[i+1]):
+        if is_operation(regex_list[i]) and is_operation(regex_list[i+1]):
             print("Not Valid Input: Two consecutive operations", regex_list[i], regex_list[i+1])
             return False
     
     # or with 1 operand
-    for i in range(len(regex_list)-2):
-        if regex_list[i+1] == '|' or regex_list[i+1] == '+':
-            if  is_char(regex_list[i]) and is_char(regex_list[i+2]):
-                continue
-            else:
-                print("Not Valid Input: Or with 1 operand", regex_list[i], regex_list[i+1], regex_list[i+2])
-                return False
-
+    if regex_list[0] == '|' or regex_list[0] == '+' or regex_list[-1] == '|' or regex_list[-1] == '+' :
+        print("Not Valid Input: OR operation with 1 operand")
+        return False
+    
     # parentheses  balancing
     stack = 0
     for symbol in regex_list:
@@ -37,7 +35,7 @@ def is_valid(regex_list):
         elif symbol == ')':
             stack -= 1
             if stack < 0:
-                print("Not Valid Input: parentheses  are unbalanced")
+                print("Not Valid Input: parentheses are unbalanced")
                 return False
     if stack != 0:
         print("Not Valid Input: parentheses  are unbalanced")
